@@ -1,7 +1,7 @@
 const fs = require("fs");
 const csv = require("csv");
 const _ = require('lodash');
-
+const setNameOfCategory = require('./helpers/nameOfCategory');
 const fileContent = fs.readFileSync("test.csv", "utf8");
 
 // Парсинг исходного файла
@@ -12,25 +12,34 @@ csv.parse(fileContent, { delimiter: ';' }, (error, parseData) => {
 	let data;
 
 	if(_.isArray(parseData)) {
-		data = _.map(parseData, row => {
+		data = _.map(_.filter(parseData, I => I[6] !== ''), row => {
 			//Полное название клуба
-			const fullNameClub = row[2];
-			
+			const fullNameClub = row[1];
+
 			//Короткое название клуба
-			const shortNameClub = row[2];
+			const shortNameClub = row[1];
 
 			//Официальное сокращение страны клуба
 			const codeCounry = 'RUS';
 
 			//Разбиение Фамилии и Имя
-			const [ firstName, lastName ] = row[1].split(' ');
+			const [ firstName, lastName ] = _.split(row[0], ' ');
 
 			//Пол спортсмена
 			const sex = row[3] === 'м' ? 'm' : 'f'
 
 			//Дата рождения
-			const [ dayBirth, monthBirth, yearBirth ] = row[4].split('.');
+			const [ dayBirth, monthBirth, yearBirth ] = _.split(row[2], '.');
 			const dateOfBirth = _.join([yearBirth, monthBirth, dayBirth], '-');
+
+			//Пол категории
+			const sexOfCategory = sex;
+
+			//Минимальный и максимальный возраст в категории
+			const [ minAgeCategory, maxAgeCategory ] = _.split(row[5], '-');
+
+			//Название категории
+			const nameOfCategory = setNameOfCategory.kumite(sexOfCategory, row[5], row[6], maxAgeCategory);
 
 			return [
 				fullNameClub,
@@ -40,11 +49,20 @@ csv.parse(fileContent, { delimiter: ';' }, (error, parseData) => {
 				firstName,
 				sex,
 				dateOfBirth,
+				nameOfCategory,
+				sexOfCategory,
+				'',
+				'',
+				_.parseInt(minAgeCategory),
+				_.parseInt(maxAgeCategory) + 1,
 			]
 		})
 	}
 	
 	csv.stringify(data, { delimiter: ';' }, (err, stringifyData) => {
-		fs.writeFile("output.csv", stringifyData, 'utf8', () => {})
+		// if(err)
+		// 	throw new Error(err);
+
+		fs.writeFile("output.csv", stringifyData, 'utf8', (err) => console.error(err))
 	})
 })
