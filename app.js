@@ -2,7 +2,7 @@ const fs = require("fs");
 const csv = require("csv");
 const _ = require('lodash');
 const setNameOfCategory = require('./helpers/nameOfCategory');
-const fileContent = fs.readFileSync("test.csv", "utf8");
+const fileContent = fs.readFileSync("sourceToSD.csv", "utf8");
 
 // Парсинг исходного файла
 csv.parse(fileContent, { delimiter: ';' }, (error, parseData) => {
