@@ -6,76 +6,80 @@ const fileContent = fs.readFileSync("test.csv", "utf8");
 
 // Парсинг исходного файла
 csv.parse(fileContent, { delimiter: ';' }, (error, parseData) => {
-	if(error)
-		return console.error('Array parsing error. ', error);
-	
-	let data;
+    if(error)
+        return console.error('Array parsing error. ', error);
+    
+    let data;
 
-	if(_.isArray(parseData)) {
-		data = _.chain(parseData)
-			.filter(I => I[6] !== '')
-			.map(row => {
-				//Место
-				const rank = row[0];
+    if(_.isArray(parseData)) {
+        data = _.chain(parseData)
+            .filter(I => I[6] !== '')
 
-				//Фамилии Имя
-				const fullName = row[1];
+            .map(row => {
+                //Место
+                const rank = row[0];
 
-				//Дата рождения
-				const dateOfBirth = row[3];
+                //Фамилии Имя
+                const fullName = row[1];
 
-				//Квалификация
-				const qualification = row[8];
+                //Дата рождения
+                const dateOfBirth = row[3];
 
-				//Название клуба
-				const fullNameClub = row[2];
+                //Квалификация
+                const qualification = row[8];
 
-				//Тренерский состав
-				const coachingStaff = row[9];
+                //Название клуба
+                const fullNameClub = row[2];
 
-				//Пол спортсмена
-				const sex = row[4] === 'м' ? 'm' : 'f'
+                //Тренерский состав
+                const coachingStaff = row[9];
 
-				//Пол категории
-				const sexOfCategory = sex;
+                //Пол спортсмена
+                const sex = row[4] === 'м' ? 'm' : 'f'
 
-				//Минимальный и максимальный возраст в категории
-				const [ minAgeCategory, maxAgeCategory ] = _.split(row[6], '-');
+                //Пол категории
+                const sexOfCategory = sex;
 
-				//Название категории
-				const nameOfCategory = setNameOfCategory.kumite(sexOfCategory, row[6], row[7], maxAgeCategory);
+                //Минимальный и максимальный возраст в категории
+                const [ minAgeCategory, maxAgeCategory ] = _.split(row[6], '-');
 
-				return [
-					rank,
-					fullName,
-					dateOfBirth,
-					qualification,
-					fullNameClub,
-					coachingStaff,
-					nameOfCategory,
-				]
-			})
-			.groupBy(I => I[6])
-			.reduce((result, value, key) => {
-				console.log(_.map(value, I => _.slice(I, 0, 5)));
+                //Название категории
+                const nameOfCategory = setNameOfCategory.kumite(sexOfCategory, row[6], row[7], maxAgeCategory);
+
+                return [
+                    rank,
+                    fullName,
+                    dateOfBirth,
+                    qualification,
+                    fullNameClub,
+                    coachingStaff,
+                    nameOfCategory,
+                ]
+            })
+
+            .groupBy(I => I[6])
+
+            .reduce((result, value, key) => {
+                // const users = _.map(value, I => _.slice(I, 0, 6));
+                
+                // console.log(_.orderBy(users));
+                return [
+                    ...result,
+                    [[key]],
+                    [['Место', 'Фамилия Имя', 'Дата рождения', 'Квалификация', 'Команда', 'ФИО тренера']],
+                    [..._.orderBy(_.map(value, I => _.slice(I, 0, 6)))],
+                    [['']],
+                ]
+            }, [])
+            .flattenDepth(1)
+            .value()
+    }
 
 
-				return [
-					...result,
-					[[key]],
-					[['Место', 'Фамилия Имя', 'Дата рождения', 'Квалификация', 'Команда', 'ФИО тренера']],
-					[..._.map(value, I => _.slice(I, 0, 6))],
-					[['']],
-				]
-			}, [])
-			.flattenDepth(1)
-			.value()
-	}
+    csv.stringify(data, { delimiter: ';' }, (err, stringifyData) => {
+        // if(err)
+        // 	throw new Error(err);
 
-	csv.stringify(data, { delimiter: ';' }, (err, stringifyData) => {
-		// if(err)
-		// 	throw new Error(err);
-
-		fs.writeFile("total.csv", stringifyData, 'utf8', (err) => console.error(err))
-	})
+        fs.writeFile("total.csv", stringifyData, 'utf8', (err) => console.error(err))
+    })
 })
