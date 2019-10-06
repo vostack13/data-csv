@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+
+        "paths": {
+            "app/*": ["./app/*"],
+            "ui/*": ["./app/common/ui-kit-react/*"]
+        }
+    }
+}

@@ -1,0 +1,60 @@
+@font-face {
+    font-family: 'Rubik-Light';
+    src: url('./fonts/Rubik-Light.woff') format('woff');
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: 'Rubik-Regular';
+    src: url('./fonts/Rubik-Regular.woff') format('woff');
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: 'Rubik-Medium';
+    src: url('./fonts/Rubik-Medium.woff') format('woff');
+    font-weight: 500;
+}
+
+
+:global(.typo-title-h4) {
+    font-family: 'Rubik-Medium', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+:global(.typo-text-light) {
+    font-family: 'Rubik-Light', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+}
+
+:global(.typo-text) {
+    font-family: 'Rubik-Regular', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 400;
+}
+
+:global(.typo-text-middle) {
+    font-family: 'Rubik-Regular', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+:global(.typo-caption-middle) {
+    font-family: 'Rubik-Medium', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+:global(.typo-caption) {
+    font-family: 'Rubik-Medium', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+:global(.typo-caption-small) {
+    font-family: 'Rubik-Medium', Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+}
