@@ -16,7 +16,7 @@ module.exports = {
                     importFrom: [
                         './app/common/ui-kit-react/assets/variables.css',
                         './app/common/ui-kit-react/assets/colors.css',
-                        './app/assets/variables.css',
+                        // './app/assets/variables.css',
                     ],
                 },
             },

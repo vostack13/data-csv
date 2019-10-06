@@ -1,38 +1,119 @@
-import {getPrepareFailure, getPrepareRequest} from 'app/redux/actions';
-import Cookies from 'js-cookie';
-import {Route, Switch} from 'react-router-dom';
-import Login from 'app/Login';
-import Main from 'app/Main';
 import React from 'react';
-import {Notification, Progress} from 'ui/index';
-import {useDispatch, useSelector} from 'react-redux';
-import {_prepareLoading} from 'app/redux/rootReducer';
+import './common/web-components/test';
+import styles from './app.css';
 
 const App = () => {
-    const dispatch = useDispatch();
-    const prepareLoading = useSelector(_prepareLoading);
+    const [listUsers, setListUsers] = React.useState([
+        {
+            place : '1',
+            name  : '',
+            team  : '',
+            date  : '',
+            sex   : '',
+            kata  : '',
+            age   : '',
+            weight: '',
+            class : '',
+            couch : '',
+        },
+    ]);
 
-    React.useEffect(() => {
-        if (!prepareLoading.isLoaded)
-            if (Cookies.get('access_key'))
-                dispatch(getPrepareRequest());
-            else
-                dispatch(getPrepareFailure());
+    const handleCSVFile = React.useCallback(files => {
+        console.log('files', files);
+        const f = files[0];
 
-        return () => {}
+        const reader = new FileReader();
+
+        reader.onload = (function() {
+            return function(e) {
+                const data = e.target.result;
+
+                const result = data
+                    .split(/[\n]+/)
+                    .map(I => {
+                        const temp = I.split(';');
+
+                        return {
+                            place : temp[0],
+                            name  : temp[1],
+                            team  : temp[2],
+                            date  : temp[3],
+                            sex   : temp[4],
+                            kata  : temp[5],
+                            age   : temp[6],
+                            weight: temp[7],
+                            class : temp[8],
+                            couch : temp[9],
+                        }
+                    });
+
+                setListUsers(result);
+
+
+                console.log('result', result);
+            };
+        })(f);
+
+        reader.readAsText(f);
     }, []);
 
-    if (!prepareLoading.isLoaded)
-        return prepareLoading.isLoading && <Progress variant='line' />;
+    function dragenter(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
 
-    return <>
-        <Notification />
+    function dragover(e) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
 
-        <Switch>
-            <Route exact path='/login' component={Login} />
-            <Route path='/' component={Main} />
-        </Switch>
-    </>
+    function drop(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        const dt = e.dataTransfer;
+        const files = dt.files;
+
+        handleCSVFile(files);
+    }
+
+    return <div>
+        <h1>App</h1>
+        <d-counter />
+
+        <input type="file" id='upload-csv' onChange={files => handleCSVFile(files)} />
+
+        <div
+            style={{
+                width          : '200px',
+                height         : '50px',
+                backgroundColor: '#f9f9f9',
+                border         : '1px dashed #cecece',
+            }}
+
+            className='dropbox'
+            onDragEnter={dragenter}
+            onDragOver={dragover}
+            onDrop={drop}
+        />
+
+        <table>
+            <tbody>
+                {listUsers.map(user => <tr key={user.name} className={styles['rowTable']}>
+                    <td>{user.place}</td>
+                    <td>{user.name}</td>
+                    <td>{user.team}</td>
+                    <td>{user.date}</td>
+                    <td>{user.sex}</td>
+                    <td>{user.kata}</td>
+                    <td>{user.age}</td>
+                    <td>{user.weight}</td>
+                    <td>{user.class}</td>
+                    <td>{user.couch}</td>
+                </tr>)}
+            </tbody>
+        </table>
+    </div>
 };
 
 export default App;

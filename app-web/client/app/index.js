@@ -1,6 +1,6 @@
 import 'core-js';
 import 'regenerator-runtime/runtime';
-import 'app/assets/variables.css';
+
 import './style.css';
 import App from './App';
 import {BrowserRouter} from 'react-router-dom';
