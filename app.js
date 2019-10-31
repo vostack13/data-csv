@@ -29,7 +29,7 @@ csv.parse(fileContent, { delimiter: ';' }, (error, parseData) => {
 			const sex = row[3] === 'м' ? 'm' : 'f'
 
 			//Дата рождения
-			const [ dayBirth, monthBirth, yearBirth ] = _.split(row[2], '.');
+			const [ yearBirth, monthBirth, dayBirth ] = _.split(row[2], '-');
 			const dateOfBirth = _.join([yearBirth, monthBirth, dayBirth], '-');
 
 			//Пол категории
